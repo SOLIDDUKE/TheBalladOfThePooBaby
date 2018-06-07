@@ -6,7 +6,7 @@ public class poopoopeepee : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		//that is very bold of you jonni
 	}
 	
 	// Update is called once per frame
