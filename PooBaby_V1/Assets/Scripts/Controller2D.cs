@@ -14,6 +14,7 @@ public class Controller2D : MonoBehaviour {
 
     public CollisionInfo collisions;
 
+    float maxClimbAngle = 80;
     float horizontalRaySpacing;
     float verticalRaySpacing;
 
@@ -65,11 +66,34 @@ public class Controller2D : MonoBehaviour {
 
             if (hit)
             {
-                velocity.x = (hit.distance - skinWidth) * directionX;
-                rayLength = hit.distance;
+                float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
-                collisions.left = directionX == -1; //If hit something and going left collions.left will be true
-                collisions.right = directionX == 1;
+                if (i == 0 && slopeAngle <= maxClimbAngle)
+                {//if the bottom ray hits a slope.
+                    print(slopeAngle);
+                    float distnaceToSlopeStart = 0;
+                    if (slopeAngle != collisions.slopeAngleOld)
+                    {//If player is starting to climb a new slope.
+                        distnaceToSlopeStart = hit.distance - skinWidth;
+                        velocity.x -= distnaceToSlopeStart * directionX; //Climb slope method will use the velocity of when it reaches the slope rather than when the raycast does
+                    }//if
+                    ClimbSlope(ref velocity, slopeAngle);
+                    velocity.x += distnaceToSlopeStart * directionX;
+                }//if
+
+                if (!collisions.climbingSlope || slopeAngle > maxClimbAngle)
+                {//Only check other rays if climbing a slope.
+                    velocity.x = (hit.distance - skinWidth) * directionX;
+                    rayLength = hit.distance;
+
+                    if (collisions.climbingSlope)
+                    {//Stops player spazzing when colliding with object on slope.
+                        velocity.y = Mathf.Tan(collisions.slopeAngle* Mathf.Deg2Rad)*Mathf.Abs(velocity.x);
+                    }//if
+
+                    collisions.left = directionX == -1; //If hit something and going left collions.left will be true
+                    collisions.right = directionX == 1;
+                }//if 
             }//if
         }//for
     }//HorizontalCollisions
@@ -95,11 +119,31 @@ public class Controller2D : MonoBehaviour {
                 velocity.y = (hit.distance -skinWidth) * directionY;
                 rayLength = hit.distance;
 
+                if (collisions.climbingSlope)
+                {//Stops player spazzing if collision above him on slope.
+                    velocity.x = velocity.y / Mathf.Tan(collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Sign(velocity.x);
+                }
+
                 collisions.below = directionY == -1;
                 collisions.above = directionY == 1;
             }//if
         }//for
     }//VerticalCollisions
+
+    void ClimbSlope(ref Vector3 velocity, float slopeAngle)
+    {
+        float moveDistance = Mathf.Abs(velocity.x);
+        float climbVelocityY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+        if (velocity.y <= climbVelocityY)
+        {
+            velocity.y = climbVelocityY;
+            velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(velocity.x);
+            collisions.below = true;//If player is climbing a slope assume ground collision
+            collisions.climbingSlope = true;
+            collisions.slopeAngle = slopeAngle;
+        }
+ 
+    }//ClimbSlope
 
     /// <summary>
     /// Raycast origin will be inset by small ammount to allow casting when player object is flat agains a surface.
@@ -135,10 +179,15 @@ public class Controller2D : MonoBehaviour {
         public bool above, below;
         public bool left, right;
 
+        public bool climbingSlope;
+        public float slopeAngle, slopeAngleOld;
         public void Reset()
         {
             above = below = false;
             left = right = false;
+            climbingSlope = false;
+            slopeAngleOld = slopeAngle;
+            slopeAngle = 0;
         }//Reset
 
     }//CollisionInfo Struct
