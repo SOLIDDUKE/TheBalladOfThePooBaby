@@ -5,12 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class Controller2D : MonoBehaviour {
 
-    [Tooltip("The Layers the raycast will look at")]
-    public LayerMask collisionMask;
+    [Tooltip("The layers the player will collide with.")]
+    public LayerMask collisionMask;         //The layers the player will collide with.
 
-    const float skinWidth = .015f;
-    public int horizontalRayCount = 4;
-    public int verticalRayCount = 4;
+    const float skinWidth = .015f;          //The width of the inset from where the rays are cast.
+    public int horizontalRayCount = 4;      //The ammount of rays to be cast on the horizontal directions.
+    public int verticalRayCount = 4;        //The ammount of rays to be cast in the verticel directions.
+
+    public CollisionInfo collisions;
 
     float horizontalRaySpacing;
     float verticalRaySpacing;
@@ -29,14 +31,25 @@ public class Controller2D : MonoBehaviour {
     }//Start
 
 
+    /// <summary>
+    /// Methods called when player is moved.
+    /// </summary>
     public void Move(Vector3 velocity)
     {
         UpdateRaycastOrigins();
+
+        collisions.Reset();
+
         if (velocity.x !=0) HorizontalCollisions(ref velocity);
         if (velocity.y !=0) VerticalCollisions(ref velocity);
         transform.Translate(velocity);
     }//Move
 
+    
+
+    /// <summary>
+    /// Detecting collisions in horizontal directions with raycasts.
+    /// </summary>
     void HorizontalCollisions(ref Vector3 velocity)
     {
         float directionX = Mathf.Sign(velocity.x);
@@ -54,10 +67,16 @@ public class Controller2D : MonoBehaviour {
             {
                 velocity.x = (hit.distance - skinWidth) * directionX;
                 rayLength = hit.distance;
+
+                collisions.left = directionX == -1; //If hit something and going left collions.left will be true
+                collisions.right = directionX == 1;
             }//if
         }//for
     }//HorizontalCollisions
 
+    /// <summary>
+    /// Detecting collisions in verticle directions with raycasts.
+    /// </summary>
     void VerticalCollisions(ref Vector3 velocity)
     {
         float directionY = Mathf.Sign(velocity.y);
@@ -75,6 +94,9 @@ public class Controller2D : MonoBehaviour {
             {
                 velocity.y = (hit.distance -skinWidth) * directionY;
                 rayLength = hit.distance;
+
+                collisions.below = directionY == -1;
+                collisions.above = directionY == 1;
             }//if
         }//for
     }//VerticalCollisions
@@ -108,6 +130,20 @@ public class Controller2D : MonoBehaviour {
         verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
     }//CalculateRaySpacing
 
+    public struct CollisionInfo
+    {
+        public bool above, below;
+        public bool left, right;
+
+        public void Reset()
+        {
+            above = below = false;
+            left = right = false;
+        }//Reset
+
+    }//CollisionInfo Struct
+
+    
 
     /// <summary>
     /// Will Store corners of player collider in vector form.
