@@ -15,6 +15,7 @@ public class Controller2D : MonoBehaviour {
     public CollisionInfo collisions;
 
     float maxClimbAngle = 80;
+    float maxDescendAngle = 75;
     float horizontalRaySpacing;
     float verticalRaySpacing;
 
@@ -38,8 +39,11 @@ public class Controller2D : MonoBehaviour {
     public void Move(Vector3 velocity)
     {
         UpdateRaycastOrigins();
-
         collisions.Reset();
+        collisions.velocityOld = velocity;
+
+
+        if (velocity.y < 0) DescendSlope(ref velocity);
 
         if (velocity.x !=0) HorizontalCollisions(ref velocity);
         if (velocity.y !=0) VerticalCollisions(ref velocity);
@@ -70,7 +74,13 @@ public class Controller2D : MonoBehaviour {
 
                 if (i == 0 && slopeAngle <= maxClimbAngle)
                 {//if the bottom ray hits a slope.
-                    print(slopeAngle);
+                    if (collisions.descendingSlope)
+                    {//Fixes issue with moving between to slopes beside and intersecting (like a 'V' shape).
+                        collisions.descendingSlope = false;
+                        velocity = collisions.velocityOld;
+                    }//if
+
+                    //print(slopeAngle);
                     float distnaceToSlopeStart = 0;
                     if (slopeAngle != collisions.slopeAngleOld)
                     {//If player is starting to climb a new slope.
@@ -128,6 +138,24 @@ public class Controller2D : MonoBehaviour {
                 collisions.above = directionY == 1;
             }//if
         }//for
+
+        if (collisions.climbingSlope)
+        {//Stops player getting stuck for a frame in begeniing of slope degree change
+            float directionX = Mathf.Sign(velocity.x);
+            rayLength = Mathf.Abs(velocity.x) + skinWidth;
+            Vector2 rayOrigin = ((directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight) + Vector2.up * velocity.y;
+            RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
+
+            if (hit)
+            {
+                float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+                if (slopeAngle != collisions.slopeAngle)
+                {//means player has collided with new slope on a slope
+                    velocity.x = (hit.distance - skinWidth) * directionX;
+                    collisions.slopeAngle = slopeAngle;
+                }//if
+            }//if
+        }//if
     }//VerticalCollisions
 
     void ClimbSlope(ref Vector3 velocity, float slopeAngle)
@@ -144,6 +172,36 @@ public class Controller2D : MonoBehaviour {
         }
  
     }//ClimbSlope
+
+    void DescendSlope(ref Vector3 velocity)
+    {
+        float directionX = Mathf.Sign(velocity.x);
+        //ray origin will come from direction player is descending slope.
+        Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomRight : raycastOrigins.bottomLeft;
+        RaycastHit2D hit = Physics2D.Raycast(rayOrigin, -Vector2.up, Mathf.Infinity, collisionMask);
+
+        if (hit)
+        {
+            float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
+            if (slopeAngle != 0 && slopeAngle <= maxDescendAngle)
+            {
+                if (Mathf.Sign(hit.normal.x) == directionX)
+                {//Means player is moving down slope.
+                    if (hit.distance - skinWidth <= Mathf.Tan(slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(velocity.x))
+                    {//Check if close enough to slope and not just falling down slope.
+                        float moveDistance = Mathf.Abs(velocity.x);
+                        float descendVelocityY = Mathf.Sin(slopeAngle * Mathf.Deg2Rad) * moveDistance;
+                        velocity.x = Mathf.Cos(slopeAngle * Mathf.Deg2Rad) * moveDistance * Mathf.Sign(velocity.x);
+                        velocity.y -= descendVelocityY;
+
+                        collisions.slopeAngle = slopeAngle;
+                        collisions.descendingSlope = true;
+                        collisions.below = true;
+                    }//if
+                }//if
+            }//if
+        }//if
+    }//DescendSlope
 
     /// <summary>
     /// Raycast origin will be inset by small ammount to allow casting when player object is flat agains a surface.
@@ -180,12 +238,17 @@ public class Controller2D : MonoBehaviour {
         public bool left, right;
 
         public bool climbingSlope;
+        public bool descendingSlope;
         public float slopeAngle, slopeAngleOld;
+        public Vector3 velocityOld;
+
         public void Reset()
         {
             above = below = false;
             left = right = false;
             climbingSlope = false;
+            descendingSlope = false;
+
             slopeAngleOld = slopeAngle;
             slopeAngle = 0;
         }//Reset
