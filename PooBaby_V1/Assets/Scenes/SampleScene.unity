@@ -194,11 +194,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 114863170004357290, guid: fdd651b0eb588ca409d402721b3733d2,
-        type: 2}
-      propertyPath: allowPassThrough
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fdd651b0eb588ca409d402721b3733d2, type: 2}
   m_IsPrefabParent: 0
@@ -634,8 +629,8 @@ MonoBehaviour:
   focusAreaSize: {x: 3, y: 5}
   lookAheadDstX: 4
   lookSmoothTimeX: 0.5
-  verticalSmoothTime: 0.5
-  verticalOffset: 10
+  verticalSmoothTime: 0.1
+  verticalOffset: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -923,6 +918,22 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0510ec868adcfbd4d904efdc5132c0ce, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1289251892 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1842062605807990, guid: fdd651b0eb588ca409d402721b3733d2,
+    type: 2}
+  m_PrefabInternal: {fileID: 17493581}
+--- !u!114 &1289251893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1289251892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27cbf722fca8dc0409f5a650df32863c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1289251894 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 114907395656431168, guid: fdd651b0eb588ca409d402721b3733d2,
@@ -1166,7 +1177,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1223672644082330, guid: 8657368a59d8da942bb38a3223ead019, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8657368a59d8da942bb38a3223ead019, type: 2}

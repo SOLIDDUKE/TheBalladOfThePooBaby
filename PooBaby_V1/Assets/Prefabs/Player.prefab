@@ -127,10 +127,11 @@ MonoBehaviour:
   wallLeap: {x: 18, y: 17}
   wallSlideSpeedMax: 3
   wallStickTime: 0.25
-  enableWallClimbing: 0
+  enableWallClimbing: 1
   maxJumpHeight: 4
   minJumpHeight: 1
   timeToJumpApex: 0.4
+  allowPassThrough: 1
 --- !u!114 &114907395656431168
 MonoBehaviour:
   m_ObjectHideFlags: 1

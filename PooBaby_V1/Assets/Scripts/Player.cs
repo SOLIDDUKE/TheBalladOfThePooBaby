@@ -41,7 +41,11 @@ public class Player : MonoBehaviour {
     float minJumpVelocity;
     float velocityXSmoothing;
 
+    bool wallSliding;
+    int wallDirX;
+
     Vector3 velocity;
+    Vector2 directionalInput;
     Controller2D controller;
 
 	void Start ()
@@ -56,18 +60,82 @@ public class Player : MonoBehaviour {
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);   //Calculate min jump velocity.
         //print("Gravity: " + gravity + "   Jump Velocity: " + jumpVelocity);
 	}//Start
-	
-	void Update ()
+
+    void Update()
     {
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        int wallDirX = (controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
+        CalculateVelocity();
+        HandleWallSliding();
 
-        float targetVelocityX = input.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirbourn);
+        controller.Move(velocity * Time.deltaTime, directionalInput);
 
-        bool wallSliding = false;
+        if (controller.collisions.above || controller.collisions.below)
+        {//This is to combat the probem of acumulating gravity.
+            if (controller.collisions.slidingDownMaxSlope)
+            {//if sliding down a max slope
+                velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
+            }//if
+            else
+            {//if not sliding down max slope
+                velocity.y = 0;
+            }//else
+            
+        }//if
+    }//Update
 
-        if ((controller.collisions.left || controller.collisions.right)&& !controller.collisions.below && velocity.y < 0 && enableWallClimbing)
+    public void SetDirectionalInput(Vector2 input)
+    {
+        directionalInput = input;
+    }//SetDirectionalInput
+
+    public void OnJumpInputDown()
+    {
+        if (wallSliding)
+        {//If player is wallsiding.
+            if (wallDirX == directionalInput.x)
+            {//if trying to move in same directino as facing wall jump up wall.
+                velocity.x = -wallDirX * wallJumpClimb.x;
+                velocity.y = wallJumpClimb.y;
+
+            }//if
+            else if (directionalInput.x == 0)
+            {//if just jumping off the wall
+                velocity.x = -wallDirX * wallJumpOff.x;
+                velocity.y = wallJumpOff.y;
+            }//else if
+            else
+            {//if input opposite to wall direcrtion prefrom a wall leap.
+                velocity.x = -wallDirX * wallLeap.x;
+                velocity.y = wallLeap.y;
+            }//else
+        }//if
+
+        if (controller.collisions.below)
+        {//If player standing on something.
+            if (controller.collisions.slidingDownMaxSlope)
+            {
+                if (directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x))
+                { // not jumping against max slope
+                    velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
+                    velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
+                }//if
+            }//if
+            else velocity.y = maxJumpVelocity;
+        }//if
+    }//OnJumpInputDown
+
+    public void OnJumpInputUp()
+    {
+        if (velocity.y > minJumpVelocity)
+        {
+            velocity.y = minJumpVelocity;
+        }//if
+    }//OnJumpInputUp
+
+    void HandleWallSliding()
+    {
+        wallDirX = (controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
+        wallSliding = false;
+        if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0 && enableWallClimbing)
         {//If these variables are met the conditions are right for wall sliding.
             wallSliding = true;
 
@@ -82,67 +150,22 @@ public class Player : MonoBehaviour {
                 velocityXSmoothing = 0;
                 velocity.x = 0;
 
-                if (input.x != wallDirX && input.x != 0)
+                if (directionalInput.x != wallDirX && directionalInput.x != 0)
                 {//only do this if moving in opposite direction of wall.
                     timeToWallUnctick -= Time.deltaTime;
                 }//if
-                else timeToWallUnctick = wallStickTime; 
+                else timeToWallUnctick = wallStickTime;
             }//if
             else timeToWallUnctick = wallStickTime;
 
-
         }//if
+    }//HandleWallSliding
 
-        if (controller.collisions.above || controller.collisions.below)
-        {//This is to combat the probem of acumulating gravity.
-            velocity.y = 0;
-        }//if
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {//If the player hits space.
-
-            if (wallSliding)
-            {//If player is wallsiding.
-                if (wallDirX == input.x)
-                {//if trying to move in same directino as facing wall jump up wall.
-                    velocity.x = -wallDirX * wallJumpClimb.x;
-                    velocity.y = wallJumpClimb.y;
-
-                }//if
-                else if (input.x ==0)
-                {//if just jumping off the wall
-                    velocity.x = -wallDirX * wallJumpOff.x;
-                    velocity.y = wallJumpOff.y;
-                }//else if
-                else
-                {//if input opposite to wall direcrtion prefrom a wall leap.
-                    velocity.x = -wallDirX * wallLeap.x;
-                    velocity.y = wallLeap.y;
-                }//else
-            }//if
-
-            if (controller.collisions.below)
-            {//If player standing on something.
-                velocity.y = maxJumpVelocity;
-            }//if
-            
-        }//if
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {//if the player releases the space bar.
-            if (velocity.y > minJumpVelocity)
-            {
-                velocity.y = minJumpVelocity;
-            }//if
-        }//if
-
+    void CalculateVelocity()
+    {
+        float targetVelocityX = directionalInput.x * moveSpeed;
+        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirbourn);
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime, input);
-
-        if (controller.collisions.above || controller.collisions.below)
-        {//This is to combat the probem of acumulating gravity.
-            velocity.y = 0;
-        }//if
-    }//Update
+    }//CalculateVelocity
 
 }//Player Class

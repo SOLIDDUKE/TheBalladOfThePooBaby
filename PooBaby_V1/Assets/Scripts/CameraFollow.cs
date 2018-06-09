@@ -10,10 +10,10 @@ public class CameraFollow : MonoBehaviour {
 
     public Controller2D target;                                //What the focus area will focus on.
     public Vector2 focusAreaSize = new Vector2(x:3,y:5);       //Set the size of the Focus Area.
-    public float lookAheadDstX;                                //The distance the camera will look ahead in the horizontal directions the player is looking.
-    public float lookSmoothTimeX;                              //The smooth time for the lookahead feature.
-    public float verticalSmoothTime;                           //The smoothe time for verticicly following the player. (Set to 0 if falling from great distances.)
-    public float verticalOffset;                               //The verticle offset of the camera.
+    public float lookAheadDstX = 3;                            //The distance the camera will look ahead in the horizontal directions the player is looking.
+    public float lookSmoothTimeX = 0.5f;                       //The smooth time for the lookahead feature.
+    public float verticalSmoothTime = 0.1f;                    //The smoothe time for verticicly following the player. (Set to 0 if falling from great distances.)
+    public float verticalOffset = 1;                           //The verticle offset of the camera.
 
     float currentLookAheadX;
     float targetLookAheadX;
@@ -60,7 +60,7 @@ public class CameraFollow : MonoBehaviour {
 
         currentLookAheadX = Mathf.SmoothDamp(currentLookAheadX, targetLookAheadX, ref smoothLookVelocityX, lookSmoothTimeX);
 
-        focusPosition.y = Mathf.SmoothDamp(transform.position.y, focusPosition.y, ref smoothVelocityY, verticalOffset);
+        focusPosition.y = Mathf.SmoothDamp(transform.position.y, focusPosition.y, ref smoothVelocityY, verticalSmoothTime);
         focusPosition += Vector2.right * currentLookAheadX;
         transform.position = (Vector3)focusPosition + Vector3.forward * -10;
     }//LateUpdate

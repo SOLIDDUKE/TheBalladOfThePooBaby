@@ -5,13 +5,14 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public class RaycastController : MonoBehaviour {
     internal const float skinWidth = .015f;          //The width of the inset from where the rays are cast.
+    const float distanceBetweenRays = .25f;
 
     [Header("Raycast Settings")]
     [Tooltip("The layers the player will collide with.")]
     public LayerMask collisionMask;         //The layers the player will collide with.
 
-    public int horizontalRayCount = 4;      //The ammount of rays to be cast on the horizontal directions.
-    public int verticalRayCount = 4;        //The ammount of rays to be cast in the verticel directions.
+    internal int horizontalRayCount;      //The ammount of rays to be cast on the horizontal directions.
+    internal int verticalRayCount;        //The ammount of rays to be cast in the verticel directions.
 
     internal float horizontalRaySpacing;
     internal float verticalRaySpacing;
@@ -54,8 +55,11 @@ public class RaycastController : MonoBehaviour {
         Bounds bounds = collider.bounds;
         bounds.Expand(skinWidth * -2);
 
-        horizontalRayCount = Mathf.Clamp(horizontalRayCount, 2, int.MaxValue);
-        verticalRayCount = Mathf.Clamp(verticalRayCount, 2, int.MaxValue);
+        float boundsWidth = bounds.size.x;
+        float boundsHeight = bounds.size.y;
+
+        horizontalRayCount = Mathf.RoundToInt(boundsHeight / distanceBetweenRays);
+        verticalRayCount = Mathf.RoundToInt(boundsWidth / distanceBetweenRays);
 
         horizontalRaySpacing = bounds.size.y / (horizontalRayCount - 1);
         verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
