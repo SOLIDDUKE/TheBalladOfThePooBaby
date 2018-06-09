@@ -8,9 +8,11 @@ public class Controller2D : RaycastController {
 
     public CollisionInfo collisions;
 
-    float maxClimbAngle = 80;
-    float maxDescendAngle = 75;
-  
+    internal bool allowPassThrough;     //Determin weather the precious baby is alloud to pass through platfroms that can be passed through.
+    float maxClimbAngle = 80;           //The maximum angle player can climb.
+    float maxDescendAngle = 75;         //The maximum angle player can descend.
+
+    Vector2 playerInput;
 
     public override void Start()
     {
@@ -18,18 +20,22 @@ public class Controller2D : RaycastController {
         collisions.faceDir = 1;
     }//Start
 
+    public void Move(Vector3 velocity, bool standingOnPlatform)
+    {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
+        Move(velocity, Vector2.zero, standingOnPlatform);
+    }//Move
 
     /// <summary>
     /// Methods called when player is moved.
     /// </summary>
-    public void Move(Vector3 velocity, bool standingOnPlatform=false)
+    public void Move(Vector3 velocity, Vector2 input, bool standingOnPlatform=false)
     {
         UpdateRaycastOrigins();
         collisions.Reset();
         collisions.velocityOld = velocity;
+        playerInput = input;
 
         if (velocity.x != 0) collisions.faceDir = (int)Mathf.Sign(velocity.x); //set facing direction of player.
-
 
         if (velocity.y < 0) DescendSlope(ref velocity);
 
@@ -128,6 +134,24 @@ public class Controller2D : RaycastController {
 
             if (hit)
             {
+                if (hit.collider.tag == "Through" && allowPassThrough)
+                {//if the player has hit an object they can passthrough and passthrough is alloud.
+                    if (directionY == 1 || hit.distance ==0)
+                    {//if moving up
+                        continue;
+                    }//if
+                    if (collisions.fallingThroughPlatfrom)
+                    {
+                        continue;
+                    }//if
+                    if (playerInput.y == -1)
+                    {//if player presses down fall through.
+                        collisions.fallingThroughPlatfrom = true;
+                        Invoke("ResetFallingThroughPlatfrom",.5f);
+                        continue;
+                    }//if
+                }//if
+
                 velocity.y = (hit.distance -skinWidth) * directionY;
                 rayLength = hit.distance;
 
@@ -205,7 +229,10 @@ public class Controller2D : RaycastController {
         }//if
     }//DescendSlope
 
-
+    void ResetFallingThroughPlatfrom()
+    {
+        collisions.fallingThroughPlatfrom = false;
+    }//ResetFallingThroughPlatfrom
 
     public struct CollisionInfo
     {
@@ -217,6 +244,7 @@ public class Controller2D : RaycastController {
         public float slopeAngle, slopeAngleOld;
         public Vector3 velocityOld;
         public int faceDir;
+        public bool fallingThroughPlatfrom;
 
         public void Reset()
         {

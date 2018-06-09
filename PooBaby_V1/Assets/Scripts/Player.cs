@@ -23,9 +23,12 @@ public class Player : MonoBehaviour {
     //--------------Player Settings------------------------------------------------------------------------------------------------------------
     [Header("Player Settings")]
     [Tooltip("Players Jump Hight.")]
-    public float jumpHeight = 4;            //How high the player will jump
+    public float maxJumpHeight = 4;             //Max height the player will jump.
+    public float minJumpHeight = 1;             //Min hight the player will jump.
     [Tooltip("Time to reach top of jump.")]
-    public float timeToJumpApex = .4f;      //How long it will take the charecter to reach highest point of jump in seconds.
+    public float timeToJumpApex = .4f;          //How long it will take the charecter to reach highest point of jump in seconds.
+    [Tooltip("This will allow the player to pass through specific platfroms tagged with passthrough.")]
+    public bool allowPassThrough;               //This will allow the player to pass through specific platfroms tagged with passthrough. This ability can be used for gas form. Press down to drop through platfroms or jump under them.
     //-----------------------------------------------------------------------------------------------------------------------------------------
 
     float timeToWallUnctick;
@@ -34,11 +37,11 @@ public class Player : MonoBehaviour {
     float moveSpeed= 6;
 
     float gravity;
-    float jumpVelocity;
+    float maxJumpVelocity;
+    float minJumpVelocity;
     float velocityXSmoothing;
+
     Vector3 velocity;
-
-
     Controller2D controller;
 
 	void Start ()
@@ -47,8 +50,10 @@ public class Player : MonoBehaviour {
         controller = GetComponent<Controller2D>();
         //--------------------------------
 
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2); //Calculate gravity
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex; //Calculate jump velocity.
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);          //Calculate gravity.
+        controller.allowPassThrough = allowPassThrough;                         //Passthough in controler is set to whatever is set in this script.
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;                  //Calculate max jump velocity.
+        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);   //Calculate min jump velocity.
         //print("Gravity: " + gravity + "   Jump Velocity: " + jumpVelocity);
 	}//Start
 	
@@ -118,13 +123,26 @@ public class Player : MonoBehaviour {
 
             if (controller.collisions.below)
             {//If player standing on something.
-                velocity.y = jumpVelocity;
+                velocity.y = maxJumpVelocity;
             }//if
             
         }//if
 
+        if (Input.GetKeyUp(KeyCode.Space))
+        {//if the player releases the space bar.
+            if (velocity.y > minJumpVelocity)
+            {
+                velocity.y = minJumpVelocity;
+            }//if
+        }//if
+
         velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-	}//Update
+        controller.Move(velocity * Time.deltaTime, input);
+
+        if (controller.collisions.above || controller.collisions.below)
+        {//This is to combat the probem of acumulating gravity.
+            velocity.y = 0;
+        }//if
+    }//Update
 
 }//Player Class
