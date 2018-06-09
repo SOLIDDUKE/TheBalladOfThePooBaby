@@ -12,7 +12,7 @@ public class Controller2D : RaycastController {
     float maxClimbAngle = 80;           //The maximum angle player can climb.
     float maxDescendAngle = 75;         //The maximum angle player can descend.
 
-    Vector2 playerInput;
+    internal Vector2 playerInput;
 
     public override void Start()
     {

@@ -20,14 +20,17 @@ public class RaycastController : MonoBehaviour {
     internal RaycastOrigins raycastOrigins;
 
 
-    public virtual void Start()
+    public virtual void Awake()
     {
         //----------Referances------------
         collider = GetComponent<BoxCollider2D>();
         //--------------------------------
+    }//Awake
+
+    public virtual void Start()
+    {
         CalculateRaySpacing();
     }//Start
-
 
     /// <summary>
     /// Raycast origin will be inset by small ammount to allow casting when player object is flat agains a surface.

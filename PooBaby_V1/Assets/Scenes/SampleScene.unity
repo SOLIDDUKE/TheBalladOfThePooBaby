@@ -627,11 +627,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91a12853419e2524eadd405919708084, type: 3}
+  m_Script: {fileID: 11500000, guid: 2cb9b6cd9b5a81d43a03f7bf6e8e16ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boundX: 1
-  boundY: 1
+  target: {fileID: 1289251894}
+  focusAreaSize: {x: 3, y: 5}
+  lookAheadDstX: 4
+  lookSmoothTimeX: 0.5
+  verticalSmoothTime: 0.5
+  verticalOffset: 10
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -919,6 +923,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0510ec868adcfbd4d904efdc5132c0ce, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1289251894 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114907395656431168, guid: fdd651b0eb588ca409d402721b3733d2,
+    type: 2}
+  m_PrefabInternal: {fileID: 17493581}
+  m_Script: {fileID: 11500000, guid: 03cb6f8908cc58f48bc4c7e3b1fdc910, type: 3}
 --- !u!1 &1329964788
 GameObject:
   m_ObjectHideFlags: 0
