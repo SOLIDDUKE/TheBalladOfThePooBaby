@@ -2,52 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
-public class Controller2D : MonoBehaviour {
 
-    [Tooltip("The layers the player will collide with.")]
-    public LayerMask collisionMask;         //The layers the player will collide with.
+public class Controller2D : RaycastController {
 
-    const float skinWidth = .015f;          //The width of the inset from where the rays are cast.
-    public int horizontalRayCount = 4;      //The ammount of rays to be cast on the horizontal directions.
-    public int verticalRayCount = 4;        //The ammount of rays to be cast in the verticel directions.
+    
 
     public CollisionInfo collisions;
 
     float maxClimbAngle = 80;
     float maxDescendAngle = 75;
-    float horizontalRaySpacing;
-    float verticalRaySpacing;
+  
 
-    BoxCollider2D collider;
-    RaycastOrigins raycastOrigins;
-
-    
-
-    void Start ()
+    public override void Start()
     {
-        //----------Referances------------
-        collider = GetComponent<BoxCollider2D>();
-        //--------------------------------
-        CalculateRaySpacing();
+        base.Start();
     }//Start
 
 
     /// <summary>
     /// Methods called when player is moved.
     /// </summary>
-    public void Move(Vector3 velocity)
+    public void Move(Vector3 velocity, bool standingOnPlatform=false)
     {
         UpdateRaycastOrigins();
         collisions.Reset();
         collisions.velocityOld = velocity;
 
-
         if (velocity.y < 0) DescendSlope(ref velocity);
 
         if (velocity.x !=0) HorizontalCollisions(ref velocity);
         if (velocity.y !=0) VerticalCollisions(ref velocity);
+
         transform.Translate(velocity);
+
+        if (standingOnPlatform) collisions.below = true;
     }//Move
 
     
@@ -70,6 +58,11 @@ public class Controller2D : MonoBehaviour {
 
             if (hit)
             {
+                if (hit.distance == 0)
+                {//This fixes slow movement when inside moving platfrom.
+                    continue;
+                }//if
+
                 float slopeAngle = Vector2.Angle(hit.normal, Vector2.up);
 
                 if (i == 0 && slopeAngle <= maxClimbAngle)
@@ -203,34 +196,7 @@ public class Controller2D : MonoBehaviour {
         }//if
     }//DescendSlope
 
-    /// <summary>
-    /// Raycast origin will be inset by small ammount to allow casting when player object is flat agains a surface.
-    /// </summary>
-    void UpdateRaycastOrigins()
-    {
-        Bounds bounds = collider.bounds;
-        bounds.Expand(skinWidth * -2);
 
-        raycastOrigins.bottomLeft = new Vector2(bounds.min.x, bounds.min.y);
-        raycastOrigins.bottomRight = new Vector2(bounds.max.x, bounds.min.y);
-        raycastOrigins.topLeft = new Vector2(bounds.min.x, bounds.max.y);
-        raycastOrigins.topRight = new Vector2(bounds.max.x, bounds.max.y);
-    }//UpdateRaycastOrigins
-
-    /// <summary>
-    /// Minimum of 2 rays are casted and the space between the rays is calculated.
-    /// </summary>
-    void CalculateRaySpacing()
-    {
-        Bounds bounds = collider.bounds;
-        bounds.Expand(skinWidth * -2);
-
-        horizontalRayCount = Mathf.Clamp(horizontalRayCount, 2, int.MaxValue);
-        verticalRayCount = Mathf.Clamp(verticalRayCount, 2, int.MaxValue);
-
-        horizontalRaySpacing = bounds.size.y / (horizontalRayCount - 1);
-        verticalRaySpacing = bounds.size.x / (verticalRayCount - 1);
-    }//CalculateRaySpacing
 
     public struct CollisionInfo
     {
@@ -254,18 +220,5 @@ public class Controller2D : MonoBehaviour {
         }//Reset
 
     }//CollisionInfo Struct
-
-    
-
-    /// <summary>
-    /// Will Store corners of player collider in vector form.
-    /// These vectors will be where the raycasts emit from.
-    /// </summary>
-    struct RaycastOrigins
-    {
-        public Vector2 topLeft, topRight;
-        public Vector2 bottomLeft, bottomRight;
-
-    }//RaycastOrigins Scruct
 
 }//Controller2D Class
