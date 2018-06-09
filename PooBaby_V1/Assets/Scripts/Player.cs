@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
 
+    public enum PlayerType { Liquid, Solid, Gas }
+
     //---------------Wall Climb Settings----------------------------------------------------------------------------------------------------
     [Header("WallJump Actions Settings")]
     [Tooltip("The ammount the player will jump up and across when preforming any of these actions.")]
