@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Controller2D : RaycastController {
 
-    
 
     public CollisionInfo collisions;
 
@@ -16,6 +15,7 @@ public class Controller2D : RaycastController {
     public override void Start()
     {
         base.Start();
+        collisions.faceDir = 1;
     }//Start
 
 
@@ -28,9 +28,13 @@ public class Controller2D : RaycastController {
         collisions.Reset();
         collisions.velocityOld = velocity;
 
+        if (velocity.x != 0) collisions.faceDir = (int)Mathf.Sign(velocity.x); //set facing direction of player.
+
+
         if (velocity.y < 0) DescendSlope(ref velocity);
 
-        if (velocity.x !=0) HorizontalCollisions(ref velocity);
+        HorizontalCollisions(ref velocity);
+
         if (velocity.y !=0) VerticalCollisions(ref velocity);
 
         transform.Translate(velocity);
@@ -45,8 +49,13 @@ public class Controller2D : RaycastController {
     /// </summary>
     void HorizontalCollisions(ref Vector3 velocity)
     {
-        float directionX = Mathf.Sign(velocity.x);
+        float directionX = collisions.faceDir;
         float rayLength = Mathf.Abs(velocity.x) + skinWidth;
+
+        if (Mathf.Abs(velocity.x) < skinWidth)
+        {//Giving extra distance to detect wall.
+            rayLength = 2 * skinWidth;
+        }
 
         for (int i = 0; i < horizontalRayCount; i++)
         {
@@ -207,6 +216,7 @@ public class Controller2D : RaycastController {
         public bool descendingSlope;
         public float slopeAngle, slopeAngleOld;
         public Vector3 velocityOld;
+        public int faceDir;
 
         public void Reset()
         {

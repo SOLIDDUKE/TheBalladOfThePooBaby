@@ -122,8 +122,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06fc9dada7334454c80d6c194344244d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallJumpClimb: {x: 7.5, y: 16}
+  wallJumpOff: {x: 8.5, y: 7}
+  wallLeap: {x: 18, y: 17}
   jumpHeight: 4
   timeToJumpApex: 0.4
+  wallSlideSpeedMax: 3
+  wallStickTime: 0.25
 --- !u!114 &114907395656431168
 MonoBehaviour:
   m_ObjectHideFlags: 1
