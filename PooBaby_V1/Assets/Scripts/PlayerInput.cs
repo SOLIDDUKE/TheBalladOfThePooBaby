@@ -8,7 +8,6 @@ public class PlayerInput : MonoBehaviour
     Player player;
     MovementStateMachine playerMovementMachine;
 
-
     void Start()
     {
         player = GetComponent<Player>();
@@ -28,6 +27,28 @@ public class PlayerInput : MonoBehaviour
         {
             playerMovementMachine.CurrentForm.OnJumpInputUp();
         }//if
+
+        // STATE SWITCHING <<<<<
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("Entering gas state");
+            playerMovementMachine.ChangeState(new GasState(), player);
+        }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log("Entering liquid state");
+            playerMovementMachine.ChangeState(new LiquidState(), player);
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("Entering solid state");
+            playerMovementMachine.ChangeState(new SolidState(), player);
+        }
+
+        // STATE SWITCHING >>>>>
 
     }//Update
 }

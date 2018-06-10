@@ -14,10 +14,11 @@ public class LiquidState : State {
     [Tooltip("After the player tries to move away from the wall they will be stuck for this ammount of time. Helps with wall jumping.")]
     public float wallStickTime = .25f;      //The time the player will stick to the wall for this ammount of time after trying to move in opposite direction, this make wall jumping easier.
     public bool enableWallClimbing;         //Toggle the ability to wall climb on and off
+    public float timeToWallUnstick;
     //----------------------------------------------------------------------------------------------------------------------------------------
-	
-	// Update is called once per frame
-	public override void Execute ()
+
+    // Update is called once per frame
+    public override void Execute ()
     {
         base.Execute();
 

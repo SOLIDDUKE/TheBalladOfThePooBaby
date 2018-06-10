@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 
+[System.Serializable]
 public class MovementStateMachine {
 
-    public State CurrentForm { get; private set; }
+    public State CurrentForm { get { return currentState; } private set { currentState = value;  } }
+    [SerializeField] public State currentState;
 
     public void Execute()
     {
@@ -20,6 +22,7 @@ public class MovementStateMachine {
     }
 }
 
+[System.Serializable]
 public class State
 {
     protected Player owner;
@@ -28,28 +31,27 @@ public class State
     protected Vector2 input;
     protected int wallDirX;
     protected float targetVelocityX;
+    protected float velocityXSmoothing;
 
     //Result of state checks in execute
     protected Vector3 velocity;
     protected Vector2 directionalInput;
 
+    protected bool allowPassThrough;
+    protected bool wallSliding;
+    
     #region  State variables
     public float maxJumpHeight = 4;
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;
 
-    public bool allowPassThrough;
-    public bool wallSliding;
-
-    public float timeToWallUnstick;
     public float accelTimeAirborne = .2f;
     public float accelTimeGrounded = .1f;
     public float moveSpeed = 6;
 
-    public float gravity;
-    public float maxJumpVelocity;
-    public float minJumpVelocity;
-    public float velocityXSmoothing;
+    [HideInInspector] public float gravity;
+    [HideInInspector] public float maxJumpVelocity;
+    [HideInInspector] public float minJumpVelocity;
     #endregion
 
     /// <summary>
