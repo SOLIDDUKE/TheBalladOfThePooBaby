@@ -41,6 +41,7 @@ public class State
     protected bool wallSliding;
     
     #region  State variables
+    [Header("These are NOT saved in inspector. Experiment here, edit in script")]
     public float maxJumpHeight = 4;
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;
@@ -49,9 +50,9 @@ public class State
     public float accelTimeGrounded = .1f;
     public float moveSpeed = 6;
 
-    [HideInInspector] public float gravity;
-    [HideInInspector] public float maxJumpVelocity;
-    [HideInInspector] public float minJumpVelocity;
+    [HideInInspector] protected float gravity;
+    [HideInInspector] protected float maxJumpVelocity;
+    [HideInInspector] protected float minJumpVelocity;
     #endregion
 
     /// <summary>
