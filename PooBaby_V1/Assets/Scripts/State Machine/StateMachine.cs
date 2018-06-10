@@ -1,36 +1,29 @@
 ﻿using UnityEngine;
 
-public class StateMachine {
+public class MovementStateMachine {
 
-    public State currentState;
-    public Player owner;
+    public State CurrentForm { get; private set; }
 
     public void Execute()
     {
-        if (currentState != null)
+        if (CurrentForm != null)
         {
-            currentState.Execute();
-            currentState.Move();
+            CurrentForm.Execute();
+            CurrentForm.Move();
         }
     }
 
     //Initialize a state and set the FSM's current to that state
-    public void ChangeState(State newState, Player player)
+    public void ChangeState(State newState, Player owner)
     {
-        owner = player;
-        currentState = newState.Enter(owner);
-    }
-
-    //Initialize a state and set the FSM's current to that state
-    public void ChangeState(State newState)
-    {
-        currentState = newState.Enter(owner);
+        CurrentForm = newState.Enter(owner);
     }
 }
 
 public class State
 {
-    protected Player player;
+    protected Player owner;
+    protected Controller2D controller;
 
     protected Vector2 input;
     protected int wallDirX;
@@ -38,10 +31,15 @@ public class State
 
     //Result of state checks in execute
     protected Vector3 velocity;
+    protected Vector2 directionalInput;
 
     #region  State variables
-    public float jumpHeight = 4;            
-    public float timeToJumpApex = .4f; 
+    public float maxJumpHeight = 4;
+    public float minJumpHeight = 1;
+    public float timeToJumpApex = .4f;
+
+    public bool allowPassThrough;
+    public bool wallSliding;
 
     public float timeToWallUnstick;
     public float accelTimeAirborne = .2f;
@@ -49,17 +47,23 @@ public class State
     public float moveSpeed = 6;
 
     public float gravity;
-    public float jumpVelocity;
+    public float maxJumpVelocity;
+    public float minJumpVelocity;
     public float velocityXSmoothing;
     #endregion
+
     /// <summary>
     /// Create and return an initialized state
     /// </summary>
-    public State Enter(Player player)
+    public State Enter(Player owner)
     {
-        this.player = player;
-        gravity = player.gravity;
-        jumpVelocity = player.jumpVelocity;
+        this.owner = owner;
+        controller = owner.controller;
+
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        controller.allowPassThrough = allowPassThrough;
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
         return this;
     }
@@ -69,31 +73,63 @@ public class State
     /// </summary>
     public virtual void Execute()
     {
-        input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        wallDirX = (player.controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
+        CalculateVelocity();
+    }
 
-        targetVelocityX = input.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (player.controller.collisions.below) ? accelTimeGrounded : accelTimeAirborne);
+    public virtual void OnJumpInputDown()
+    {
+        if (controller.collisions.below)
+        {//If player standing on something.
+            if (controller.collisions.slidingDownMaxSlope)
+            {
+                if (directionalInput.x != -Mathf.Sign(controller.collisions.slopeNormal.x))
+                { // not jumping against max slope
+                    velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
+                    velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
+                }//if
+            }//if
+            else velocity.y = maxJumpVelocity;
+        }//if
+    }
 
-        //Fix accumulating gravity
-        if (player.controller.collisions.above || player.controller.collisions.below)
+    public virtual void OnJumpInputUp()
+    {
+        if (velocity.y > minJumpVelocity)
         {
-            velocity.y = 0;
+            velocity.y = minJumpVelocity;
         }
     }
 
+    /// <summary>
+    /// Moves the owner, call after movement velocities calculated and handled
+    /// </summary>
     public void Move()
     {
-        //If player standing on something.
-        if (Input.GetKeyDown(KeyCode.Space))
+        controller.Move(velocity * Time.deltaTime, input);
+
+        //Fix accumulating gravity
+        if (controller.collisions.above || controller.collisions.below)
         {
-            if (player.controller.collisions.below)
+            if (controller.collisions.slidingDownMaxSlope)
             {
-                velocity.y = jumpVelocity;
+                velocity.y += controller.collisions.slopeNormal.y * -gravity * Time.deltaTime;
+            }
+            else
+            {
+                velocity.y = 0;
             }
         }
+    }
 
+    protected void CalculateVelocity()
+    {
+        float targetVelocityX = directionalInput.x * moveSpeed;
+        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelTimeGrounded : accelTimeAirborne);
         velocity.y += gravity * Time.deltaTime;
-        player.controller.Move(velocity * Time.deltaTime);
+    }
+
+    public void SetDirectionalInput(Vector2 input)
+    {
+        directionalInput = input;
     }
 }
