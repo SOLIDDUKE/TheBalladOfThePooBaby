@@ -199,6 +199,16 @@ Prefab:
       propertyPath: enableWallClimbing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114863170004357290, guid: fdd651b0eb588ca409d402721b3733d2,
+        type: 2}
+      propertyPath: movementMachine.currentState.allowPassThrough
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114863170004357290, guid: fdd651b0eb588ca409d402721b3733d2,
+        type: 2}
+      propertyPath: movementMachine.currentState.maxJumpHeight
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fdd651b0eb588ca409d402721b3733d2, type: 2}
   m_IsPrefabParent: 0

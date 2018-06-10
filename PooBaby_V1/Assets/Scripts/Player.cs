@@ -4,7 +4,7 @@
 public class Player : MonoBehaviour {
 
     public MovementStateMachine movementMachine;
-    public Controller2D controller;
+    [HideInInspector] public Controller2D controller;
 
 	void Awake ()
     {

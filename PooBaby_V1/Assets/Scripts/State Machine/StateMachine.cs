@@ -42,17 +42,18 @@ public class State
     
     #region  State variables
     [Header("These are NOT saved in inspector. Experiment here, edit in script")]
-    public float maxJumpHeight = 4;
-    public float minJumpHeight = 1;
-    public float timeToJumpApex = .4f;
-
-    [Range(0f, 10f)] public float accelTimeAirborne = .2f;
+    [Range(0f, 10f)] public float accelTimeJumpOffWall = .2f;
     [Range(0f, 10f)] public float accelTimeGrounded = .1f;
     public float moveSpeed = 6;
 
-    [HideInInspector] protected float gravity;
-    [HideInInspector] protected float maxJumpVelocity;
-    [HideInInspector] protected float minJumpVelocity;
+    //Use to calculate gravity
+    protected float maxJumpHeight = 4;
+    protected float minJumpHeight = 1;
+    protected float timeToJumpApex = .4f;
+    //Set in State Entry
+    protected float gravity;
+    protected float maxJumpVelocity;
+    protected float minJumpVelocity;
     #endregion
 
     /// <summary>
@@ -72,7 +73,7 @@ public class State
     }
 
     /// <summary>
-    /// First get inputs and check jump, then run specific state code
+    /// FInputs -> HANDLE MOVEMENT (Execute() -- you are here) -> Move
     /// </summary>
     public virtual void Execute()
     {
@@ -127,7 +128,7 @@ public class State
     protected void CalculateVelocity()
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
-        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelTimeGrounded : accelTimeAirborne);
+        velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelTimeGrounded : accelTimeJumpOffWall);
         velocity.y += gravity * Time.deltaTime;
     }
 
