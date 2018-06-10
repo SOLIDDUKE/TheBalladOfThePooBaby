@@ -46,8 +46,8 @@ public class State
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;
 
-    public float accelTimeAirborne = .2f;
-    public float accelTimeGrounded = .1f;
+    [Range(0f, 10f)] public float accelTimeAirborne = .2f;
+    [Range(0f, 10f)] public float accelTimeGrounded = .1f;
     public float moveSpeed = 6;
 
     [HideInInspector] protected float gravity;
