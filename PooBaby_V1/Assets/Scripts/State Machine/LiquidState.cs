@@ -2,28 +2,22 @@
 
 public class LiquidState : State {
 
-    //---------------Wall Climb Settings----------------------------------------------------------------------------------------------------
-    [Header("WallJump Actions Settings")]
-    [Tooltip("The amount the player will jump up and across when preforming any of these actions.")]
     public Vector2 wallJumpClimb = new Vector2(x: 7.5f, y: 16);
     public Vector2 wallJumpOff = new Vector2(x: 8.5f, y: 7);
     public Vector2 wallLeap = new Vector2(x: 18f, y: 17);
 
-    [Header("WallClimb Settings")]
-    public float wallSlideSpeedMax = 3;     //The max speed the player can build up sliding down a wall.
-    [Tooltip("After the player tries to move away from the wall they will be stuck for this ammount of time. Helps with wall jumping.")]
-    public float wallStickTime = .25f;      //The time the player will stick to the wall for this ammount of time after trying to move in opposite direction, this make wall jumping easier.
-    public bool enableWallClimbing;         //Toggle the ability to wall climb on and off
-    //----------------------------------------------------------------------------------------------------------------------------------------
-	
-	// Update is called once per frame
-	public override void Execute ()
+    public float wallSlideSpeedMax = 3;     
+    public float wallStickTime = .25f;            
+    public float timeToWallUnstick;
+
+    public override void Execute ()
     {
         base.Execute();
 
         HandleWallSliding();
     }
 
+    //Set velocity if sticking to a wall
     private void HandleWallSliding()
     {
         wallDirX = (controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
@@ -53,6 +47,7 @@ public class LiquidState : State {
         }
     }
 
+    //Add wall sliding to jump functionality
     override public void OnJumpInputDown()
     {
         base.OnJumpInputDown();
