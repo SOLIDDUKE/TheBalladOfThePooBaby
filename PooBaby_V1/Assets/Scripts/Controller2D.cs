@@ -20,6 +20,7 @@ public class Controller2D : RaycastController
         collisions.faceDir = 1;
     }//Start
 
+
     public void Move(Vector2 moveAmmount, bool standingOnPlatform)
     {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
         Move(moveAmmount, Vector2.zero, standingOnPlatform);

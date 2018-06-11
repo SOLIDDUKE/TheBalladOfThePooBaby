@@ -12,6 +12,7 @@ public class PlayerInput : MonoBehaviour
     {
         player = GetComponent<Player>();
         playerMovementMachine = player.movementMachine;
+        playerMovementMachine.ChangeState(new SolidState(), player);
     }//Start
 
     void Update()
@@ -42,7 +43,7 @@ public class PlayerInput : MonoBehaviour
             playerMovementMachine.ChangeState(new LiquidState(), player);
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Entering solid state");
             playerMovementMachine.ChangeState(new SolidState(), player);

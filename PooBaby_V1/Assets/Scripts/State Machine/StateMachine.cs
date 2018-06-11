@@ -27,6 +27,7 @@ public class State
 {
     protected Player owner;
     protected Controller2D controller;
+    protected SpriteRenderer spriteRenderer;
 
     protected Vector2 input;
     protected int wallDirX;
@@ -37,7 +38,7 @@ public class State
     protected Vector3 velocity;
     protected Vector2 directionalInput;
 
-    protected bool allowPassThrough;
+    //protected bool allowPassThrough;
     protected bool wallSliding;
     
     #region  State variables
@@ -56,16 +57,18 @@ public class State
     protected float minJumpVelocity;
     #endregion
 
+
     /// <summary>
     /// Create and return an initialized state
     /// </summary>
-    public State Enter(Player owner)
+    public virtual State Enter(Player owner)
     {
         this.owner = owner;
         controller = owner.controller;
+        spriteRenderer = controller.gameObject.GetComponent<SpriteRenderer>();
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        controller.allowPassThrough = allowPassThrough;
+        //controller.allowPassThrough = allowPassThrough;
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
@@ -109,8 +112,7 @@ public class State
     /// </summary>
     public void Move()
     {
-        controller.Move(velocity * Time.deltaTime, input);
-
+        controller.Move(velocity * Time.deltaTime, directionalInput);
         //Fix accumulating gravity
         if (controller.collisions.above || controller.collisions.below)
         {
@@ -132,8 +134,21 @@ public class State
         velocity.y += gravity * Time.deltaTime;
     }
 
+    /// <summary>
+    /// This gets called every frame by the player input class in update.
+    /// </summary>
     public void SetDirectionalInput(Vector2 input)
     {
         directionalInput = input;
+
+        //Need to find a better way of doing this as it is constantly being called. and does not affect poo baby is his velocity is not changed by player input.
+        if (directionalInput.x < 0)
+        {//Moving Left
+            spriteRenderer.flipX=false;
+        }
+        if (directionalInput.x > 0)
+        {//Moving Right
+            spriteRenderer.flipX = true;
+        }
     }
 }

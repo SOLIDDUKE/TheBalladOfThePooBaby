@@ -10,6 +10,15 @@ public class LiquidState : State {
     public float wallStickTime = .25f;            
     public float timeToWallUnstick;
 
+    public override State Enter(Player owner)
+    {
+        base.Enter(owner);
+        moveSpeed = 6f;
+        spriteRenderer.color = Color.yellow;
+        controller.allowPassThrough = false;
+        return this;
+    }
+
     public override void Execute ()
     {
         base.Execute();
