@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Controller2D : RaycastController {
+public class Controller2D : RaycastController
+{
 
 
     public CollisionInfo collisions;
@@ -24,10 +25,15 @@ public class Controller2D : RaycastController {
         Move(moveAmmount, Vector2.zero, standingOnPlatform);
     }//Move
 
+    public void Move(Vector2 moveAmmount, bool standingOnPlatform)
+    {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
+        Move(moveAmmount, Vector2.zero, standingOnPlatform);
+    }//Move
+
     /// <summary>
     /// Methods called when player is moved.
     /// </summary>
-    public void Move(Vector2 moveAmmount, Vector2 input, bool standingOnPlatform=false)
+    public void Move(Vector2 moveAmmount, Vector2 input, bool standingOnPlatform = false)
     {
         UpdateRaycastOrigins();
         collisions.Reset();
@@ -42,14 +48,14 @@ public class Controller2D : RaycastController {
 
         HorizontalCollisions(ref moveAmmount);
 
-        if (moveAmmount.y !=0) VerticalCollisions(ref moveAmmount);
-
+        if (moveAmmount.y != 0) VerticalCollisions(ref moveAmmount);
+        
         transform.Translate(moveAmmount);
 
         if (standingOnPlatform) collisions.below = true;
     }//Move
 
-    
+
 
     /// <summary>
     /// Detecting collisions in horizontal directions with raycasts.
@@ -107,7 +113,7 @@ public class Controller2D : RaycastController {
 
                     if (collisions.climbingSlope)
                     {//Stops player spazzing when colliding with object on slope.
-                        moveAmmount.y = Mathf.Tan(collisions.slopeAngle* Mathf.Deg2Rad)*Mathf.Abs(moveAmmount.x);
+                        moveAmmount.y = Mathf.Tan(collisions.slopeAngle * Mathf.Deg2Rad) * Mathf.Abs(moveAmmount.x);
                     }//if
 
                     collisions.left = directionX == -1; //If hit something and going left collions.left will be true
@@ -137,7 +143,7 @@ public class Controller2D : RaycastController {
             {
                 if (hit.collider.tag == "Through" && allowPassThrough)
                 {//if the player has hit an object they can passthrough and passthrough is alloud.
-                    if (directionY == 1 || hit.distance ==0)
+                    if (directionY == 1 || hit.distance == 0)
                     {//if moving up
                         continue;
                     }//if
@@ -148,12 +154,12 @@ public class Controller2D : RaycastController {
                     if (playerInput.y == -1)
                     {//if player presses down fall through.
                         collisions.fallingThroughPlatfrom = true;
-                        Invoke("ResetFallingThroughPlatfrom",.5f);
+                        Invoke("ResetFallingThroughPlatfrom", .5f);
                         continue;
                     }//if
                 }//if
 
-                moveAmmount.y = (hit.distance -skinWidth) * directionY;
+                moveAmmount.y = (hit.distance - skinWidth) * directionY;
                 rayLength = hit.distance;
 
                 if (collisions.climbingSlope)
@@ -199,7 +205,6 @@ public class Controller2D : RaycastController {
             collisions.slopeAngle = slopeAngle;
             collisions.slopeNormal = slopeNormal;
         }//if
- 
     }//ClimbSlope
 
     void DescendSlope(ref Vector2 moveAmmount)
@@ -212,7 +217,6 @@ public class Controller2D : RaycastController {
             SlideDownMaxSlope(maxSlopeHitRight, ref moveAmmount);
         }//if
         
-
         if (!collisions.slidingDownMaxSlope)
         {//Only needs to calculate if not sliding down a max slope
             float directionX = Mathf.Sign(moveAmmount.x);

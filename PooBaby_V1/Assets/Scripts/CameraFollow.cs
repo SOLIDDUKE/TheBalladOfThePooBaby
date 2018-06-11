@@ -6,10 +6,11 @@ using UnityEngine;
 //Block player input.
 //Freeze player posision(mid air).
 //Seamlessly Switch back to player and unblock movement.
-public class CameraFollow : MonoBehaviour {
+public class CameraFollow : MonoBehaviour
+{
 
     public Controller2D target;                                //What the focus area will focus on.
-    public Vector2 focusAreaSize = new Vector2(x:3,y:5);       //Set the size of the Focus Area.
+    public Vector2 focusAreaSize = new Vector2(x: 3, y: 5);       //Set the size of the Focus Area.
     public float lookAheadDstX = 3;                            //The distance the camera will look ahead in the horizontal directions the player is looking.
     public float lookSmoothTimeX = 0.5f;                       //The smooth time for the lookahead feature.
     public float verticalSmoothTime = 0.1f;                    //The smoothe time for verticicly following the player. (Set to 0 if falling from great distances.)
@@ -123,7 +124,4 @@ public class CameraFollow : MonoBehaviour {
             velocity = new Vector2(shiftX, shiftY);
         }//Update
     }//FocusArea struct
-
-
-
 }//CameraFollow Class

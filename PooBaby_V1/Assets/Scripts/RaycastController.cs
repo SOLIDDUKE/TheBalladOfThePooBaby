@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class RaycastController : MonoBehaviour {
+public class RaycastController : MonoBehaviour
+{
     internal const float skinWidth = .015f;          //The width of the inset from where the rays are cast.
     const float distanceBetweenRays = .25f;
 

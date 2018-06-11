@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformController : RaycastController {
+public class PlatformController : RaycastController
+{
 
     [Header("Platform Settings")]
     public LayerMask passengerMask;
@@ -11,13 +12,13 @@ public class PlatformController : RaycastController {
 
     public float speed;         //Speed of the platfrom.
     public float waitTime;      //The time the platform waits at its waypoint in seconds.
-    [Tooltip("The Ease ammount on platfrom. If 0 no ease will be applied."),Range(0,3)]
+    [Tooltip("The Ease ammount on platfrom. If 0 no ease will be applied."), Range(0, 3)]
     public float easeAmount;    //The ammount of ease on platform.
     [Tooltip("If true the platform will cycle through all waypoints rather then go back trhrough them in reverse.")]
     public bool cyclic;         //IF true the platfrom will go to firt waypoint after hitting all waypoints.
-    
 
-    
+
+
 
     int fromWaypointIndex;      //Index of global waypoint moving away from.
     float percentBetweenWaypoints;
@@ -26,7 +27,7 @@ public class PlatformController : RaycastController {
     List<PassengerMovement> passengerMovement;
     Dictionary<Transform, Controller2D> passengerDictionary = new Dictionary<Transform, Controller2D>();
 
-    public override void Start ()
+    public override void Start()
     {
         base.Start();
 
@@ -36,8 +37,8 @@ public class PlatformController : RaycastController {
             globalWaypoints[i] = localWaypoints[i] + transform.position;
         }//for
     }//Start
-	
-	void Update ()
+
+    void Update()
     {
         UpdateRaycastOrigins();
 
@@ -85,7 +86,7 @@ public class PlatformController : RaycastController {
                 }//if
             }//if
             nextMoveTime = Time.time + waitTime;
-            
+
         }//if
 
         return newPos - transform.position;
@@ -115,7 +116,7 @@ public class PlatformController : RaycastController {
         float directionX = Mathf.Sign(velocity.x);
         float directionY = Mathf.Sign(velocity.y);
 
-        
+
         if (velocity.y != 0)
         {//vertically moving platform.
             float rayLength = Mathf.Abs(velocity.y) + skinWidth;
@@ -126,7 +127,7 @@ public class PlatformController : RaycastController {
                 rayOrigin += Vector2.right * (verticalRaySpacing * i);
                 RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.up * directionY, rayLength, passengerMask);
 
-                if (hit && hit.distance !=0)
+                if (hit && hit.distance != 0)
                 {//If passanger is found
 
                     if (!movedPassengers.Contains(hit.transform))
@@ -141,7 +142,7 @@ public class PlatformController : RaycastController {
             }//if
         }//if
 
-        
+
         if (velocity.x != 0)
         {// Horizontally moving platform
             float rayLength = Mathf.Abs(velocity.x) + skinWidth;
@@ -166,7 +167,7 @@ public class PlatformController : RaycastController {
             }//if
         }//if
 
-        
+
         if (directionY == -1 || velocity.y == 0 && velocity.x != 0)
         {// Passenger on top of a horizontally or downward moving platform
             float rayLength = skinWidth * 2;
