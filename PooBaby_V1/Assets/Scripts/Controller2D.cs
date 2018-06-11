@@ -25,11 +25,6 @@ public class Controller2D : RaycastController
         Move(moveAmmount, Vector2.zero, standingOnPlatform);
     }//Move
 
-    public void Move(Vector2 moveAmmount, bool standingOnPlatform)
-    {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
-        Move(moveAmmount, Vector2.zero, standingOnPlatform);
-    }//Move
-
     /// <summary>
     /// Methods called when player is moved.
     /// </summary>

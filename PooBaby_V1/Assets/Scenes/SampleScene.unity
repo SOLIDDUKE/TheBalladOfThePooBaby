@@ -918,12 +918,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc1d88d325fce646a1ef9d305968f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 985354596}
+  target: {fileID: 0}
   focusAreaSize: {x: 3, y: 5}
-  lookAheadDstX: 4
+  lookAheadDstX: 3
   lookSmoothTimeX: 0.5
   verticalSmoothTime: 0.1
-  verticalOffset: 0
+  verticalOffset: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1554,12 +1554,6 @@ Transform:
   m_Father: {fileID: 929774688}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 54.924004}
---- !u!114 &985354596 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114413026722254686, guid: fdd651b0eb588ca409d402721b3733d2,
-    type: 2}
-  m_PrefabInternal: {fileID: 58994823}
-  m_Script: {fileID: 11500000, guid: 03cb6f8908cc58f48bc4c7e3b1fdc910, type: 3}
 --- !u!1 &1033660500
 GameObject:
   m_ObjectHideFlags: 0
