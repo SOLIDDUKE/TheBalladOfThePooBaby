@@ -19,6 +19,7 @@ public class MovementStateMachine {
     public void ChangeState(State newState, Player owner)
     {
         CurrentForm = newState.Enter(owner);
+        //Destroy(Instantiate(owner.stateChangeEffect, owner.gameObject.transform.position, owner.gameObject.transform.rotation) as GameObject, 2);
     }
 }
 
@@ -68,7 +69,6 @@ public class State
         spriteRenderer = controller.gameObject.GetComponent<SpriteRenderer>();
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        //controller.allowPassThrough = allowPassThrough;
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
@@ -79,7 +79,7 @@ public class State
     /// FInputs -> HANDLE MOVEMENT (Execute() -- you are here) -> Move
     /// </summary>
     public virtual void Execute()
-    {
+    {//This is run every frame
         CalculateVelocity();
     }
 
