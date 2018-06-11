@@ -20,6 +20,10 @@ public class Controller2D : RaycastController
         collisions.faceDir = 1;
     }//Start
 
+    public void Move(Vector2 moveAmmount, bool standingOnPlatform)
+    {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
+        Move(moveAmmount, Vector2.zero, standingOnPlatform);
+    }//Move
 
     public void Move(Vector2 moveAmmount, bool standingOnPlatform)
     {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
@@ -45,7 +49,7 @@ public class Controller2D : RaycastController
         HorizontalCollisions(ref moveAmmount);
 
         if (moveAmmount.y != 0) VerticalCollisions(ref moveAmmount);
-
+        
         transform.Translate(moveAmmount);
 
         if (standingOnPlatform) collisions.below = true;
@@ -201,7 +205,6 @@ public class Controller2D : RaycastController
             collisions.slopeAngle = slopeAngle;
             collisions.slopeNormal = slopeNormal;
         }//if
-
     }//ClimbSlope
 
     void DescendSlope(ref Vector2 moveAmmount)
@@ -213,8 +216,7 @@ public class Controller2D : RaycastController
             SlideDownMaxSlope(maxSlopeHitLeft, ref moveAmmount);
             SlideDownMaxSlope(maxSlopeHitRight, ref moveAmmount);
         }//if
-
-
+        
         if (!collisions.slidingDownMaxSlope)
         {//Only needs to calculate if not sliding down a max slope
             float directionX = Mathf.Sign(moveAmmount.x);

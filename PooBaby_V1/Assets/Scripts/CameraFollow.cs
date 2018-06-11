@@ -124,7 +124,4 @@ public class CameraFollow : MonoBehaviour
             velocity = new Vector2(shiftX, shiftY);
         }//Update
     }//FocusArea struct
-
-
-
 }//CameraFollow Class

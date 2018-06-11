@@ -13,7 +13,7 @@ public class Player : MonoBehaviour {
         movementMachine = new MovementStateMachine();
         movementMachine.ChangeState(new LiquidState(), this);
 	}
-
+  
     private void Update()
     {
         movementMachine.Execute();
