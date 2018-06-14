@@ -10,7 +10,6 @@ public class MovementStateMachine : MonoBehaviour
 {
     public State CurrentForm { get; private set; }
 
-    //public void Execute()
     public void Update()
     {
         if (CurrentForm != null)

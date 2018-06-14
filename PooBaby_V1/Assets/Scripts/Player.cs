@@ -5,7 +5,6 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public GameObject stateChangeEffect;
-    public MovementStateMachine movementMachine;
 
     public Sprite liquidPoo;            
     public Sprite solidPoo;
@@ -13,20 +12,25 @@ public class Player : MonoBehaviour {
 
     private Dictionary<PooTypes, State> states;
 
+    [HideInInspector] public MovementStateMachine movementMachine;
     [HideInInspector] public Controller2D controller;
 
 	void Awake ()
     {
+        //--------Referances-------------------------------------
         controller = GetComponent<Controller2D>();
         movementMachine = GetComponent<MovementStateMachine>();
-        movementMachine.ChangeState(new SolidState(), this);
+        //-------------------------------------------------------
 
+        //States are saved as objects in dictionary.
         states = new Dictionary<PooTypes, State>
         {
             { PooTypes.Gas, new GasState() },
             { PooTypes.Liquid, new LiquidState() },
             { PooTypes.Solid, new SolidState() }
         };
+
+        movementMachine.ChangeState(states[PooTypes.Solid], this); //On Start he will be this state.
     }
   
     private void Update()

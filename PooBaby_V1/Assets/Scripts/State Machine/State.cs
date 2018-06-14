@@ -18,7 +18,6 @@ public class State
     protected Vector3 velocity;
     protected Vector2 directionalInput;
 
-    //protected bool allowPassThrough;
     protected bool wallSliding;
 
     #region  State variables
@@ -27,10 +26,6 @@ public class State
     [Range(0f, 10f)] public float accelTimeGrounded = .1f;
     public float moveSpeed = 6;
 
-    //Use to calculate gravity
-    protected float maxJumpHeight = 4;
-    protected float minJumpHeight = 1;
-    protected float timeToJumpApex = .4f;
     //Set in State Entry
     protected float gravity;
     protected float maxJumpVelocity;
@@ -42,12 +37,11 @@ public class State
     /// </summary>
     public virtual State Enter(Player owner)
     {
+        //---------Referances-------------------------------------------------
         this.owner = owner;
         controller = owner.controller;
         spriteRenderer = controller.gameObject.GetComponent<SpriteRenderer>();
-        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+        //--------------------------------------------------------------------
 
         return this;
     }
@@ -110,6 +104,19 @@ public class State
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelTimeGrounded : accelTimeJumpOffWall);
         velocity.y += gravity * Time.deltaTime;
     }
+
+
+    public void CalculateGravity(float maxJumpHeight)
+    {
+        float minJumpHeight = 1;
+        float timeToJumpApex = .4f;
+
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
+        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
+    }
+
+
 
     /// <summary>
     /// This gets called every frame by the player input class in update.

@@ -9,8 +9,8 @@ public class GasState : State {
     public override State Enter(Player owner)
     {
         base.Enter(owner);
+        CalculateGravity(10);
         owner.gameObject.transform.localScale = new Vector3(2, 1, 0);
-        spriteRenderer.color = Color.green;
         spriteRenderer.sprite = owner.gasPoo;
         moveSpeed = 1f;
         controller.allowPassThrough = true;
