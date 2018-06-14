@@ -37,7 +37,6 @@ public class State
     protected float minJumpVelocity;
     #endregion
 
-
     /// <summary>
     /// Create and return an initialized state
     /// </summary>

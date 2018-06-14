@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-//[System.Serializable]
 public class MovementStateMachine : MonoBehaviour
 {
+    public State CurrentForm { get; private set; }
 
-    public State CurrentForm { get { return currentState; } private set { currentState = value; } }
-    [SerializeField] public State currentState;
-
-    public void Execute()
+    //public void Execute()
+    public void Update()
     {
         if (CurrentForm != null)
         {
@@ -25,3 +21,5 @@ public class MovementStateMachine : MonoBehaviour
         Destroy(Instantiate(owner.stateChangeEffect, owner.gameObject.transform.position, owner.gameObject.transform.rotation) as GameObject, 2);
     }
 }//MovementStateMachine
+
+public enum PooTypes { Solid, Gas, Liquid }

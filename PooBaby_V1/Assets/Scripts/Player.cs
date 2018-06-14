@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(Controller2D))]
 public class Player : MonoBehaviour {
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour {
     public Sprite solidPoo;
     public Sprite gasPoo;
 
+    private Dictionary<PooTypes, State> states;
+
     [HideInInspector] public Controller2D controller;
 
 	void Awake ()
@@ -17,15 +20,20 @@ public class Player : MonoBehaviour {
         controller = GetComponent<Controller2D>();
         movementMachine = GetComponent<MovementStateMachine>();
         movementMachine.ChangeState(new SolidState(), this);
-	}
+
+        states = new Dictionary<PooTypes, State>
+        {
+            { PooTypes.Gas, new GasState() },
+            { PooTypes.Liquid, new LiquidState() },
+            { PooTypes.Solid, new SolidState() }
+        };
+    }
   
     private void Update()
     {
-        movementMachine.Execute();//This is run every frame as MovementStateMachine is not inheriting from monobehaviour therefore doesn not have an update method.
-
+        //-----MOVEMENT HANDLING------------------------------------------
         Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         movementMachine.CurrentForm.SetDirectionalInput(directionalInput);//Tell the state machine the players current input.
-
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -36,25 +44,23 @@ public class Player : MonoBehaviour {
             movementMachine.CurrentForm.OnJumpInputUp();
         }//if
 
-
-
         //------STATE SWITCHING--------------------------------------------
         if (Input.GetKeyDown(KeyCode.G))
         {
             Debug.Log("Entering gas state");
-            movementMachine.ChangeState(new GasState(), this);
+            movementMachine.ChangeState(states[PooTypes.Gas], this);
         }
 
         if (Input.GetKeyDown(KeyCode.L))
         {
             Debug.Log("Entering liquid state");
-            movementMachine.ChangeState(new LiquidState(), this);
+            movementMachine.ChangeState(states[PooTypes.Liquid], this);
         }
 
         if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("Entering solid state");
-            movementMachine.ChangeState(new SolidState(), this);
+            movementMachine.ChangeState(states[PooTypes.Solid], this);
         }
         //----------------------------------------------------------------
     }
