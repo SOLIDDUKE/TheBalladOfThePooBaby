@@ -152,7 +152,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 4950810643890920, guid: fdd651b0eb588ca409d402721b3733d2, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114879601133987838, guid: fdd651b0eb588ca409d402721b3733d2,
+        type: 2}
+      propertyPath: stateChangeEffect
+      value: 
+      objectReference: {fileID: 1979030935553886, guid: 4966a8fed5d2db24e9009dd536e3ae92,
+        type: 2}
+    m_RemovedComponents:
+    - {fileID: 114963074257667896, guid: fdd651b0eb588ca409d402721b3733d2, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: fdd651b0eb588ca409d402721b3733d2, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &60975372
@@ -271,7 +282,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4051308028910470, guid: 8657368a59d8da942bb38a3223ead019, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 11.220301
+      value: 10.05
       objectReference: {fileID: 0}
     - target: {fileID: 4051308028910470, guid: 8657368a59d8da942bb38a3223ead019, type: 2}
       propertyPath: m_LocalPosition.z
@@ -918,7 +929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edc1d88d325fce646a1ef9d305968f75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 985354596}
   focusAreaSize: {x: 3, y: 5}
   lookAheadDstX: 3
   lookSmoothTimeX: 0.5
@@ -1554,6 +1565,12 @@ Transform:
   m_Father: {fileID: 929774688}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 54.924004}
+--- !u!114 &985354596 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114413026722254686, guid: fdd651b0eb588ca409d402721b3733d2,
+    type: 2}
+  m_PrefabInternal: {fileID: 58994823}
+  m_Script: {fileID: 11500000, guid: 03cb6f8908cc58f48bc4c7e3b1fdc910, type: 3}
 --- !u!1 &1033660500
 GameObject:
   m_ObjectHideFlags: 0

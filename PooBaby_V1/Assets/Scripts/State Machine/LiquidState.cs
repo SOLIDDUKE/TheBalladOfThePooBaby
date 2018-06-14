@@ -13,8 +13,10 @@ public class LiquidState : State {
     public override State Enter(Player owner)
     {
         base.Enter(owner);
+        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Rays will need recalculated upon each change of size
         moveSpeed = 6f;
         spriteRenderer.color = Color.yellow;
+        spriteRenderer.sprite = owner.liquidPoo;
         controller.allowPassThrough = false;
         return this;
     }

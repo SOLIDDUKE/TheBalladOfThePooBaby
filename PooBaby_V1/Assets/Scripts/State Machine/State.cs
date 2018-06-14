@@ -1,29 +1,8 @@
-﻿/*using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-[System.Serializable]
-public class MovementStateMachine {
-
-    public State CurrentForm { get { return currentState; } private set { currentState = value;  } }
-    [SerializeField] public State currentState;
-
-    public void Execute()
-    {
-        if (CurrentForm != null)
-        {
-            CurrentForm.Execute();
-            CurrentForm.Move();
-        }
-    }
-
-    //Initialize a state and set the FSM's current to that state
-    public void ChangeState(State newState, Player owner)
-    {
-        CurrentForm = newState.Enter(owner);
-        //Destroy(Instantiate(owner.stateChangeEffect, owner.gameObject.transform.position, owner.gameObject.transform.rotation) as GameObject, 2);
-    }
-}
-
-[System.Serializable]
+//[System.Serializable]
 public class State
 {
     protected Player owner;
@@ -41,7 +20,7 @@ public class State
 
     //protected bool allowPassThrough;
     protected bool wallSliding;
-    
+
     #region  State variables
     [Header("These are NOT saved in inspector. Experiment here, edit in script")]
     [Range(0f, 10f)] public float accelTimeJumpOffWall = .2f;
@@ -67,7 +46,6 @@ public class State
         this.owner = owner;
         controller = owner.controller;
         spriteRenderer = controller.gameObject.GetComponent<SpriteRenderer>();
-
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
@@ -144,11 +122,13 @@ public class State
         //Need to find a better way of doing this as it is constantly being called. and does not affect poo baby is his velocity is not changed by player input.
         if (directionalInput.x < 0)
         {//Moving Left
-            spriteRenderer.flipX=false;
+            spriteRenderer.flipX = false;
         }
         if (directionalInput.x > 0)
         {//Moving Right
             spriteRenderer.flipX = true;
         }
     }
-}*/
+
+
+}//State Class

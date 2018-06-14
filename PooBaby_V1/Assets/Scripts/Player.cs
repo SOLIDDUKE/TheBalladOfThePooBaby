@@ -5,13 +5,17 @@ public class Player : MonoBehaviour {
 
     public GameObject stateChangeEffect;
     public MovementStateMachine movementMachine;
+
+    public Sprite liquidPoo;            
+    public Sprite solidPoo;
+    public Sprite gasPoo;
+
     [HideInInspector] public Controller2D controller;
 
 	void Awake ()
     {
         controller = GetComponent<Controller2D>();
-
-        movementMachine = new MovementStateMachine();
+        movementMachine = GetComponent<MovementStateMachine>();
         movementMachine.ChangeState(new SolidState(), this);
 	}
   

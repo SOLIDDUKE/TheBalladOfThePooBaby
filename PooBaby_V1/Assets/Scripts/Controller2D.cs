@@ -5,12 +5,10 @@ using UnityEngine;
 
 public class Controller2D : RaycastController
 {
-
-
     public CollisionInfo collisions;
 
     internal bool allowPassThrough;     //Determin weather the precious baby is alloud to pass through platfroms that can be passed through.
-    public float maxSlopeAngle = 80;           //The maximum angle player can climb and decend.
+    public float maxSlopeAngle = 80;    //The maximum angle player can climb and decend.
 
     internal Vector2 playerInput;
 
@@ -30,6 +28,7 @@ public class Controller2D : RaycastController
     /// </summary>
     public void Move(Vector2 moveAmmount, Vector2 input, bool standingOnPlatform = false)
     {
+        CalculateRaySpacing();      //Improvement would be to calculate only on state cahnge rather than every frame.
         UpdateRaycastOrigins();
         collisions.Reset();
         collisions.velocityOld = moveAmmount;

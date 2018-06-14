@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 61398651049268884}
   - component: {fileID: 114413026722254686}
   - component: {fileID: 114879601133987838}
-  - component: {fileID: 114963074257667896}
+  - component: {fileID: 114670051085713644}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -39,7 +39,7 @@ Transform:
   m_GameObject: {fileID: 1279491206578106}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.06, y: -3.06, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -84,6 +84,17 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   maxSlopeAngle: 65
+--- !u!114 &114670051085713644
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1279491206578106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c575b4e46857a449a7c1eb8adcd9e09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114879601133987838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -95,23 +106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06fc9dada7334454c80d6c194344244d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementMachine:
-    currentState:
-      accelTimeJumpOffWall: 0.2
-      accelTimeGrounded: 0.1
-      moveSpeed: 6
+  stateChangeEffect: {fileID: 1979030935553886, guid: 4966a8fed5d2db24e9009dd536e3ae92,
+    type: 2}
+  movementMachine: {fileID: 0}
+  liquidPoo: {fileID: 21300000, guid: 16b8c8618dc7f1f4a875a1bd22b4bf98, type: 3}
+  solidPoo: {fileID: 21300000, guid: c40091dfebdc7974089cc7024982dc6d, type: 3}
+  gasPoo: {fileID: 21300000, guid: cf8a5709a9bbc2e46bf26adead1960f9, type: 3}
   controller: {fileID: 0}
---- !u!114 &114963074257667896
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1279491206578106}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ddb031ce84fb9048a8080aa2f2e551a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &212180814707737828
 SpriteRenderer:
   m_ObjectHideFlags: 1
