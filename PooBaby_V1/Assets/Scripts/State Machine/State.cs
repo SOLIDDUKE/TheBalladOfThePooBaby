@@ -53,12 +53,12 @@ public class State
     }
 
     /// <summary>
+    /// Modify the velocity vector in this method to add movement functionalities.
     /// FInputs -> HANDLE MOVEMENT (Execute() -- you are here) -> Move
+    /// This method is called once inputs are known, and before the object is moved.
+    /// For example, Liquid state adds wall climbing by overriding this method and fiddling with velocity.
     /// </summary>
-    public virtual void Execute()
-    {//This is run every frame
-        CalculateVelocity();
-    }
+    public virtual void Execute(){ }
 
     public virtual void OnJumpInputDown()
     {
@@ -104,7 +104,7 @@ public class State
         }
     }
 
-    protected void CalculateVelocity()
+    public void CalculateVelocity()
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelTimeGrounded : accelTimeJumpOffWall);
