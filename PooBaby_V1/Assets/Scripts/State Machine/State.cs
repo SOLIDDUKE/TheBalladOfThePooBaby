@@ -2,35 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//[System.Serializable]
 public class State
 {
     protected Player owner;
     protected Controller2D controller;
     protected SpriteRenderer spriteRenderer;
 
-    protected Vector2 input;
-    protected int wallDirX;
-    protected float targetVelocityX;
-    protected float velocityXSmoothing;
+    protected float targetVelocityX;        //This variable is present because there is smoothing on the plater velocity in place. So the player wil build up to target velocity.
+    protected float velocityXSmoothing;     //This is used in smoothing the players velocity on the x axis.
+    protected float accelTimeGrounded = .1f;//Time it takes the player to accelerate when they are on the ground.
+    protected float accelTimeJumpOffWall = .2f;//Time it takes player to accelerate when wall jumping.
+
 
     //Result of state checks in execute
-    protected Vector3 velocity;
-    protected Vector2 directionalInput;
+    protected Vector3 velocity;             //The current velocity of the player.
+    protected Vector2 directionalInput;     //The directional input of player if moving left this will equal(-1.0, 0.0)
 
-    protected bool wallSliding;
-
-    #region  State variables
-    [Header("These are NOT saved in inspector. Experiment here, edit in script")]
-    [Range(0f, 10f)] public float accelTimeJumpOffWall = .2f;
-    [Range(0f, 10f)] public float accelTimeGrounded = .1f;
-    public float moveSpeed = 6;
 
     //Set in State Entry
-    protected float gravity;
-    protected float maxJumpVelocity;
-    protected float minJumpVelocity;
-    #endregion
+    protected float moveSpeed;              //The move speed is set in each state.
+    protected float gravity;                //The calculate gravity method is called in  state.
+    protected float maxJumpVelocity;        //This is the max velocity player can reach when jumping (calculated in CalculateGravity method).
+    protected float minJumpVelocity;        //This is the min velocity player can reach when jumping (calculated in CalculateGravity method).
 
     /// <summary>
     /// Create and return an initialized state
@@ -52,7 +45,9 @@ public class State
     /// This method is called once inputs are known, and before the object is moved.
     /// For example, Liquid state adds wall climbing by overriding this method and fiddling with velocity.
     /// </summary>
-    public virtual void Execute(){ }
+    public virtual void Execute(){
+        Debug.Log(velocity);
+    }
 
     public virtual void OnJumpInputDown()
     {

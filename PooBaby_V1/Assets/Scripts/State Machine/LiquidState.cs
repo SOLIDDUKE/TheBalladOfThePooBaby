@@ -2,22 +2,30 @@
 
 public class LiquidState : State {
 
-    public Vector2 wallJumpClimb = new Vector2(x: 7.5f, y: 16);
-    public Vector2 wallJumpOff = new Vector2(x: 8.5f, y: 7);
-    public Vector2 wallLeap = new Vector2(x: 18f, y: 17);
+    //------------Wall Movment Velocitys-----------------------------
+    public Vector2 wallJumpClimb = new Vector2(x: 7.5f, y: 16);     //If the player jumps while moving in direction of wall.
+    public Vector2 wallJumpOff = new Vector2(x: 8.5f, y: 7);        //If the player jumps while not moving in any direction.
+    public Vector2 wallLeap = new Vector2(x: 18f, y: 17);           //If the player jumps whule moving in opposite direction of wall.
+    //---------------------------------------------------------
 
-    public float wallSlideSpeedMax = 3;     
-    public float wallStickTime = .25f;            
-    public float timeToWallUnstick;
+    public float wallSlideSpeedMax = 3;                             //The max speed the player will slide down the wall.    
+    public float wallStickTime = .25f;                              //If the player is holding in the opposite direction of the wall there is a small deley before the unstick to give them time is with wish to prefrom a wall leap.
+    public float timeToWallUnstick;                                 
+
+    protected int wallDirX;                                         //If wall to the left this equals -1 if on right just 1.
+    protected bool wallSliding;                                     //Is the player currently wall sliding.
+
 
     public override State Enter(Player owner)
     {
         base.Enter(owner);
-        CalculateGravity(4);
-        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Rays will need recalculated upon each change of size
-        moveSpeed = 6f;
-        spriteRenderer.sprite = owner.liquidPoo;
-        controller.allowPassThrough = false;
+        //----------Unique state attributes-----------------
+        CalculateGravity(4);                                         //Set jump for this state.
+        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
+        spriteRenderer.sprite = owner.liquidPoo;                     //Set sprite for this state.
+        moveSpeed = 6f;                                              //Set movement speed for this state.
+        controller.allowPassThrough = false;                         //Set weather passthough ability is alloud on this state.
+        //---------------------------------------------------
         return this;
     }
 
@@ -33,6 +41,7 @@ public class LiquidState : State {
     {
         wallDirX = (controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
         wallSliding = false;
+
         if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0)
         {//If these variables are met the conditions are right for wall sliding.
             wallSliding = true;
@@ -55,8 +64,8 @@ public class LiquidState : State {
                 else timeToWallUnstick = wallStickTime;
             }//if
             else timeToWallUnstick = wallStickTime;
-        }
-    }
+        }//if
+    }//HandleWallSliding
 
     //Add wall sliding to jump functionality
     override public void OnJumpInputDown()
@@ -64,15 +73,15 @@ public class LiquidState : State {
         base.OnJumpInputDown();
 
         if (wallSliding)
-        {//If player is wallsiding.
+        {//If player is currently wallsiding.
             if (wallDirX == directionalInput.x)
-            {//if trying to move in same directino as facing wall jump up wall.
+            {//if trying to move in same direction as facing wall jump up wall.
                 velocity.x = -wallDirX * wallJumpClimb.x;
                 velocity.y = wallJumpClimb.y;
 
             }//if
             else if (directionalInput.x == 0)
-            {//if just jumping off the wall
+            {//if just jumping off the wall not pressing left or right.
                 velocity.x = -wallDirX * wallJumpOff.x;
                 velocity.y = wallJumpOff.y;
             }//else if

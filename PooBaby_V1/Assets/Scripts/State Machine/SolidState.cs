@@ -9,11 +9,13 @@ public class SolidState : State {
     public override State Enter(Player owner)
     {
         base.Enter(owner);
-        CalculateGravity(4);
-        owner.gameObject.transform.localScale = new Vector3(1, 2, 0);
-        spriteRenderer.sprite = owner.solidPoo;
-        controller.allowPassThrough = false;
-        moveSpeed = 6f;
+        //----------Unique state attributes-----------------
+        CalculateGravity(4);                                         //Set jump for this state.
+        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
+        spriteRenderer.sprite = owner.solidPoo;                      //Set sprite for this state.
+        moveSpeed = 6f;                                              //Set movement speed for this state.
+        controller.allowPassThrough = false;                         //Set weather passthough ability is alloud on this state.
+        //---------------------------------------------------
         return this;
     }
 

@@ -9,11 +9,13 @@ public class GasState : State {
     public override State Enter(Player owner)
     {
         base.Enter(owner);
-        CalculateGravity(10);
-        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);
-        spriteRenderer.sprite = owner.gasPoo;
-        moveSpeed = 1f;
-        controller.allowPassThrough = true;
+        //----------Unique state attributes-----------------
+        CalculateGravity(8);                                         //Set jump for this state.
+        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
+        spriteRenderer.sprite = owner.gasPoo;                        //Set sprite for this state.
+        moveSpeed = 3f;                                              //Set movement speed for this state.
+        controller.allowPassThrough = false;                         //Set weather passthough ability is alloud on this state.
+        //---------------------------------------------------
         return this;
     }
 
