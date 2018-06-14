@@ -30,6 +30,12 @@ public class MovementStateMachine : MonoBehaviour
     public void ChangeState(State newState, Player owner)
     {
         CurrentForm = newState.Enter(owner);
+
+        //BUG FIX: Prevent slowing on state transition when on a slope - Puts the sprite above the wall
+        //TODO: MAY NOT WORK ON ALL SLOPES, FURTHER TESTING NEEDED!
+        //TODO: Make the height increase the exact length of the bottom raycast lines?
+        owner.gameObject.transform.position = new Vector2(owner.gameObject.transform.position.x, owner.gameObject.transform.position.y + .3f);
+
         Destroy(Instantiate(owner.stateChangeEffect, owner.gameObject.transform.position, owner.gameObject.transform.rotation) as GameObject, 2);
     }
 }//MovementStateMachine
