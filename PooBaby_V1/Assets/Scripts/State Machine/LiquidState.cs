@@ -20,8 +20,8 @@ public class LiquidState : State {
     {
         base.Enter(owner);
         //----------Unique state attributes-----------------
-        CalculateGravity(4);                                         //Set jump for this state.
-        owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
+        CalculateGravity(4,1,.4f);                                         //Set jump for this state.
+        owner.gameObject.transform.localScale = new Vector3(1.5f, 1, 0);//Set size for this state.
         spriteRenderer.sprite = owner.liquidPoo;                     //Set sprite for this state.
         moveSpeed = 6f;                                              //Set movement speed for this state.
         controller.allowPassThrough = false;                         //Set weather passthough ability is alloud on this state.

@@ -45,10 +45,11 @@ public class State
     /// This method is called once inputs are known, and before the object is moved.
     /// For example, Liquid state adds wall climbing by overriding this method and fiddling with velocity.
     /// </summary>
-    public virtual void Execute(){
-        Debug.Log(velocity);
-    }
+    public virtual void Execute(){}
 
+    /// <summary>
+    /// Called by player class when jump button is hit.
+    /// </summary>
     public virtual void OnJumpInputDown()
     {
         if (controller.collisions.below)
@@ -65,6 +66,9 @@ public class State
         }//if
     }
 
+    /// <summary>
+    /// Called by player class when jump button is released.
+    /// </summary>
     public virtual void OnJumpInputUp()
     {
         if (velocity.y > minJumpVelocity)
@@ -74,7 +78,8 @@ public class State
     }
 
     /// <summary>
-    /// Moves the owner, call after movement velocities calculated and handled
+    /// Moves the owner, call after movement velocities calculated and handled. 
+    /// Called every frame in Movement State Machine.
     /// </summary>
     public void Move()
     {
@@ -93,6 +98,11 @@ public class State
         }
     }
 
+
+    /// <summary>
+    /// Used to calculate the velocity.
+    /// Called every frame in Movement State Machine.
+    /// </summary>
     public void CalculateVelocity()
     {
         float targetVelocityX = directionalInput.x * moveSpeed;
@@ -100,11 +110,11 @@ public class State
         velocity.y += gravity * Time.deltaTime;
     }
 
-
-    public void CalculateGravity(float maxJumpHeight)
-    {
-        float minJumpHeight = 1;
-        float timeToJumpApex = .4f;
+    /// <summary>
+    /// Called in the Enter method by each state so each state can have unique gravityy and jump values.
+    /// </summary>
+    public void CalculateGravity(float maxJumpHeight, float minJumpHeight, float timeToJumpApex)
+    {//example maxJumpHeight =4, minJumpHeight=1, timeToJumpApex =.4f
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
