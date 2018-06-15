@@ -14,7 +14,7 @@ public class GasState : State {
         owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
         spriteRenderer.sprite = owner.gasPoo;                        //Set sprite for this state.
         moveSpeed = 3f;                                              //Set movement speed for this state.
-        controller.allowPassThrough = false;                         //Set weather passthough ability is alloud on this state.
+        controller.allowPassThrough = true;                         //Set weather passthough ability is alloud on this state.
         //---------------------------------------------------
         return this;
     }
