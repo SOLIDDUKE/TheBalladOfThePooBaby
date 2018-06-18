@@ -12,14 +12,19 @@ public class Controller2D : RaycastController
 
     internal Vector2 playerInput;
 
+    float speed;                        //The horizontal speed
+    float vSpeed;                       //The verical speed
+
     public override void Start()
     {
         base.Start();
         collisions.faceDir = 1;
     }//Start
 
+
+
     public void Move(Vector2 moveAmmount, bool standingOnPlatform)
-    {//This method just calls the main move method so the moving platfrom class doens t have to worry about a vector 2 input.
+    {//This method just calls the main move method so the moving platfrom class doenst have to worry about a vector 2 input.
         Move(moveAmmount, Vector2.zero, standingOnPlatform);
     }//Move
 
@@ -28,6 +33,9 @@ public class Controller2D : RaycastController
     /// </summary>
     public void Move(Vector2 moveAmmount, Vector2 input, bool standingOnPlatform = false)
     {
+
+        Debug.Log("input: "+input);
+
         CalculateRaySpacing();      //Improvement would be to calculate only on state cahnge rather than every frame.
         UpdateRaycastOrigins();
         collisions.Reset();
