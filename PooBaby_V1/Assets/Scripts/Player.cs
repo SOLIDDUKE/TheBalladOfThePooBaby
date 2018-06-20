@@ -36,7 +36,7 @@ public class Player : MonoBehaviour {
     private void Update()
     {
         //-----MOVEMENT HANDLING------------------------------------------
-        Vector2 directionalInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        Vector2 directionalInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxisRaw("Vertical")); //Get raw axis of verticle as jump speed is calculated with velocity.
         movementMachine.CurrentForm.SetDirectionalInput(directionalInput);//Tell the state machine the players current input.
 
         if (Input.GetKeyDown(KeyCode.Space))

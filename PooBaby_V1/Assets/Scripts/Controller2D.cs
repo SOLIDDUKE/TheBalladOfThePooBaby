@@ -10,10 +10,9 @@ public class Controller2D : RaycastController
     internal bool allowPassThrough;     //Determin weather the precious baby is alloud to pass through platfroms that can be passed through.
     public float maxSlopeAngle = 80;    //The maximum angle player can climb and decend.
 
-    internal Vector2 playerInput;
+    internal Vector2 playerInput;        //The directional input of player if moving left this will equal(-1.0, 0.0)
+    internal Vector2 velocity;           //The current velocity of the player.
 
-    float speed;                        //The horizontal speed
-    float vSpeed;                       //The verical speed
 
     public override void Start()
     {
@@ -21,7 +20,14 @@ public class Controller2D : RaycastController
         collisions.faceDir = 1;
     }//Start
 
-
+    private void FixedUpdate()
+    {
+        //Animation paramaters should be assigned in fixed update rather than move (which runs of update) so they are not tied to the framerate.
+        anim.SetFloat("vSpeed", velocity.y);                //Set the vertical speed in the animator.
+        anim.SetFloat("speed",Mathf.Abs(playerInput.x));    //Set the horizontal speed in the animator.
+        anim.SetBool("ground", collisions.below);           //Set weather the player is grounded or not in the animator.
+        //Will need wall climbing to be set in animator.
+    }
 
     public void Move(Vector2 moveAmmount, bool standingOnPlatform)
     {//This method just calls the main move method so the moving platfrom class doenst have to worry about a vector 2 input.
@@ -33,8 +39,7 @@ public class Controller2D : RaycastController
     /// </summary>
     public void Move(Vector2 moveAmmount, Vector2 input, bool standingOnPlatform = false)
     {
-
-        Debug.Log("input: "+input);
+        velocity = moveAmmount / Time.deltaTime;    //Calculate the velocity that will be used for animator.
 
         CalculateRaySpacing();      //Improvement would be to calculate only on state cahnge rather than every frame.
         UpdateRaycastOrigins();
@@ -55,6 +60,7 @@ public class Controller2D : RaycastController
         transform.Translate(moveAmmount);
 
         if (standingOnPlatform) collisions.below = true;
+
     }//Move
 
 
@@ -151,7 +157,14 @@ public class Controller2D : RaycastController
                     }//if
                     if (collisions.fallingThroughPlatfrom)
                     {
+                        if (hit.distance < skinWidth)
+                        {//This fixes the issue of dropping through multiple passthrough platfroms.
                         continue;
+                        }
+                        else
+                        {
+                         collisions.fallingThroughPlatfrom = false;
+                        }
                     }//if
                     if (playerInput.y == -1)
                     {//if player presses down fall through.

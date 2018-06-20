@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class RaycastController : MonoBehaviour
 {
@@ -19,6 +20,7 @@ public class RaycastController : MonoBehaviour
     internal float verticalRaySpacing;
 
     internal BoxCollider2D collider;
+    internal Animator anim;
     internal RaycastOrigins raycastOrigins;
 
 
@@ -26,6 +28,7 @@ public class RaycastController : MonoBehaviour
     {
         //----------Referances------------
         collider = GetComponent<BoxCollider2D>();
+        anim = GetComponent<Animator>();
         //--------------------------------
     }//Awake
 
