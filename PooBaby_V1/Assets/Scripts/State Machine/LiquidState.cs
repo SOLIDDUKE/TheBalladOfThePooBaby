@@ -13,14 +13,13 @@ public class LiquidState : State {
     public float timeToWallUnstick;                                 
 
     protected int wallDirX;                                         //If wall to the left this equals -1 if on right just 1.
-    protected bool wallSliding;                                     //Is the player currently wall sliding.
 
 
     public override State Enter(Player owner)
     {
         base.Enter(owner);
         //----------Unique state attributes-----------------
-        CalculateGravity(4,1,.4f);                                         //Set jump for this state.
+        CalculateGravity(4,1,.4f);                                   //Set jump for this state.
         owner.gameObject.transform.localScale = new Vector3(1.5f, 1, 0);//Set size for this state.
         spriteRenderer.sprite = owner.liquidPoo;                     //Set sprite for this state.
         moveSpeed = 6f;                                              //Set movement speed for this state.
@@ -32,19 +31,19 @@ public class LiquidState : State {
     public override void Execute ()
     {
         base.Execute();
-
         HandleWallSliding();
     }
+
 
     //Set velocity if sticking to a wall
     private void HandleWallSliding()
     {
         wallDirX = (controller.collisions.left) ? -1 : 1;//If player facing left var = -1 else +1.
-        wallSliding = false;
+        controller.wallSliding = false;
 
         if ((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0)
         {//If these variables are met the conditions are right for wall sliding.
-            wallSliding = true;
+            controller.wallSliding = true;
 
             if (velocity.y < -wallSlideSpeedMax)
             {
@@ -72,7 +71,7 @@ public class LiquidState : State {
     {
         base.OnJumpInputDown();
 
-        if (wallSliding)
+        if (controller.wallSliding)
         {//If player is currently wallsiding.
             if (wallDirX == directionalInput.x)
             {//if trying to move in same direction as facing wall jump up wall.

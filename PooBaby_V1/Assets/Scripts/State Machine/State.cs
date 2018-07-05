@@ -8,7 +8,7 @@ public class State
     protected Controller2D controller;
     protected SpriteRenderer spriteRenderer;
 
-    protected float targetVelocityX;        //This variable is present because there is smoothing on the plater velocity in place. So the player wil build up to target velocity.
+    protected float targetVelocityX;        //This variable is present because there is smoothing on the planar velocity in place. So the player will build up to target velocity.
     protected float velocityXSmoothing;     //This is used in smoothing the players velocity on the x axis.
     protected float accelTimeGrounded = .1f;//Time it takes the player to accelerate when they are on the ground.
     protected float accelTimeJumpOffWall = .2f;//Time it takes player to accelerate when wall jumping.

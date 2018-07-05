@@ -7,8 +7,12 @@ public class Controller2D : RaycastController
 {
     public CollisionInfo collisions;
 
-    internal bool allowPassThrough;     //Determin weather the precious baby is alloud to pass through platfroms that can be passed through.
-    public float maxSlopeAngle = 80;    //The maximum angle player can climb and decend.
+    [Header("Controller Settings")]
+    [Tooltip("The maximum angle player can climb and decend.")]
+    public float maxSlopeAngle = 80;     //The maximum angle player can climb and decend.
+
+    internal bool wallSliding;           //Is the player currently wall sliding.
+    internal bool allowPassThrough;      //Determin weather the precious baby is alloud to pass through platfroms that can be passed through.
 
     internal Vector2 playerInput;        //The directional input of player if moving left this will equal(-1.0, 0.0)
     internal Vector2 velocity;           //The current velocity of the player.
@@ -26,8 +30,8 @@ public class Controller2D : RaycastController
         anim.SetFloat("vSpeed", velocity.y);                //Set the vertical speed in the animator.
         anim.SetFloat("speed",Mathf.Abs(playerInput.x));    //Set the horizontal speed in the animator.
         anim.SetBool("ground", collisions.below);           //Set weather the player is grounded or not in the animator.
-        //Will need wall climbing to be set in animator.
-    }
+        anim.SetBool("wallSliding", wallSliding);           //Set weather the player is currently wall sliding in the animator.
+    }//FixedUpdate
 
     public void Move(Vector2 moveAmmount, bool standingOnPlatform)
     {//This method just calls the main move method so the moving platfrom class doenst have to worry about a vector 2 input.

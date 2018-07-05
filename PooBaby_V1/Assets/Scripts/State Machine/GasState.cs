@@ -10,11 +10,11 @@ public class GasState : State {
     {
         base.Enter(owner);
         //----------Unique state attributes-----------------
-        CalculateGravity(8, 4, .9f);                                         //Set jump for this state.
+        CalculateGravity(8, 4, .9f);                                 //Set jump for this state.
         owner.gameObject.transform.localScale = new Vector3(2, 1, 0);//Set size for this state.
         spriteRenderer.sprite = owner.gasPoo;                        //Set sprite for this state.
         moveSpeed = 3f;                                              //Set movement speed for this state.
-        controller.allowPassThrough = true;                         //Set weather passthough ability is alloud on this state.
+        controller.allowPassThrough = true;                          //Set weather passthough ability is alloud on this state.
         //---------------------------------------------------
         return this;
     }
